@@ -31,7 +31,7 @@ class CollectionTypeExtension extends AbstractTypeExtension
      *
      * @throws InvalidArgumentException
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // Do not inject the form property accessor to ignore the $throwExceptionOnInvalidIndex settings
         $builder->setDataMapper($options['compound'] ? new DataMapper() : null);
