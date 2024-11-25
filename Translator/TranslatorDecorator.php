@@ -5,12 +5,13 @@ namespace Sidus\BaseBundle\Translator;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Overrides base translator to ignore translations when domain is false
  */
-class TranslatorDecorator implements TranslatorInterface, TranslatorBagInterface
+class TranslatorDecorator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface
 {
     /** @var TranslatorInterface */
     protected $translator;
@@ -26,7 +27,7 @@ class TranslatorDecorator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         if (false === $domain) {
             return strtr($id, $parameters);
@@ -38,7 +39,7 @@ class TranslatorDecorator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
         if (false === $domain) {
             return strtr($id, $parameters);
@@ -50,7 +51,7 @@ class TranslatorDecorator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale)
     {
         $this->translator->setLocale($locale);
     }
@@ -58,7 +59,7 @@ class TranslatorDecorator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->translator->getLocale();
     }
@@ -72,21 +73,13 @@ class TranslatorDecorator implements TranslatorInterface, TranslatorBagInterface
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function getCatalogue($locale = null)
+    public function getCatalogue($locale = null): MessageCatalogueInterface
     {
-        if ($this->translator instanceof TranslatorBagInterface) {
-            return $this->translator->getCatalogue($locale);
-        }
-
-        return null;
+        return $this->translator->getCatalogue($locale);
     }
 
     public function getCatalogues(): array
     {
-        if ($this->translator instanceof TranslatorBagInterface) {
-            return $this->translator->getCatalogues();
-        }
-
-        return  [];
+        return $this->translator->getCatalogues();
     }
 }

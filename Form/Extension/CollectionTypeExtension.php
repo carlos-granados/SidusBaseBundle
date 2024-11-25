@@ -12,7 +12,7 @@ namespace Sidus\BaseBundle\Form\Extension;
 
 use InvalidArgumentException;
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\DataMapper\PropertyPathMapper;
+use Symfony\Component\Form\Extension\Core\DataMapper\DataMapper;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -31,10 +31,10 @@ class CollectionTypeExtension extends AbstractTypeExtension
      *
      * @throws InvalidArgumentException
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // Do not inject the form property accessor to ignore the $throwExceptionOnInvalidIndex settings
-        $builder->setDataMapper($options['compound'] ? new PropertyPathMapper() : null);
+        $builder->setDataMapper($options['compound'] ? new DataMapper() : null);
     }
 
     /**
